@@ -84,6 +84,37 @@ cargo clippy --workspace --all-targets
 
 ---
 
+## Memakai MRust di Proyek Lain (dari GitHub)
+
+MRust adalah **library DSL** (proc-macro + runtime), jadi bisa dipakai langsung dari repo GitHub ini lewat dependency `git` di `Cargo.toml` proyekmu:
+
+```toml
+[dependencies]
+iced = { version = "0.13", features = ["tokio"] }        # wajib — mrust tidak me-export iced
+mrust-macro = { git = "https://github.com/zulsyam23-dot/mrust", branch = "main" }
+mrust-runtime = { git = "https://github.com/zulsyam23-dot/mrust", branch = "main" }
+```
+
+Lalu di kode:
+
+```rust
+use mrust_macro::view;
+```
+
+### Catatan penting
+
+- **Iced harus ikut di-declare** — `mrust-macro` tidak me-export `iced`. Tambahkan juga `iced = "0.13"`, plus:
+  - fitur `"svg"` bila memakai `<icon>`/`<svg>`;
+  - fitur `"tokio"` bila memakai `mrust_runtime::interval` (polling).
+- **Tentukan branch** — default `git` mengambil `master`, sedangkan repo ini memakai `main`, jadi `branch = "main"` wajib (atau gunakan `rev`).
+- **Pin revisi untuk stabilitas** — `branch = "main"` ikut commit terbaru tiap build. Untuk versi pasti, pakai `rev`:
+  ```toml
+  mrust-macro = { git = "https://github.com/zulsyam23-dot/mrust", rev = "8c9f066" }
+  ```
+- `mrust-runtime` hanya perlu ditambahkan bila memakai `interval`/`Spread`/`if_elem`; `mrust-macro` saja cukup untuk `view!` dasar.
+
+---
+
 ## Daftar Demo (urutan dasar → lanjutan)
 
 Setiap demo punya `README.md` sendiri. Salah satunya, demo10, menggabungkan hampir semua fitur.

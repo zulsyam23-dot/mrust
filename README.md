@@ -29,7 +29,8 @@ Tidak ada runtime JavaScript, tidak ada webview — hasilnya aplikasi desktop na
 
 Workspace Cargo berisi **library DSL** (macro + runtime) dan **10 demo** berjenjang yang menunjukkan fitur dari dasar hingga paling lengkap.
 
-> Roadmap & desain detail ada di [`prd.md`](prd.md) dan [`prd2.md`](prd2.md).
+> Roadmap & desain detail ada di [`prd.md`](prd.md), [`prd2.md`](prd2.md),
+> dan [`prd3.md`](prd3.md) (proposal framework `mrust-fw`).
 > Referensi lengkap setiap tag & token (leksikal → `hx_*` → runtime) ada di [`api-token.md`](api-token.md).
 
 ---

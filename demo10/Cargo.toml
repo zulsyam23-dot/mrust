@@ -5,6 +5,5 @@ edition = "2021"
 publish = false
 
 [dependencies]
+mrust-fw = { path = "../mrust-fw" }
 iced = { version = "0.13", features = ["svg"] }
-mrust-macro = { path = "../mrust-macro" }
-mrust-runtime = { path = "../mrust-runtime" }

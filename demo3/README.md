@@ -16,11 +16,11 @@ cargo run --package demo3
 - `hx_disabled={app.ticks > 3}` — nonaktifkan tombol sesuai kondisi
 - `hx_visible={app.live}` / `hx_if={...}` — tampilkan/sembunyikan teks
 - `hx_hoist="align_x"` + `align_x={iced::Alignment::Center}` — turunkan alignment ke semua anak kolom
-- Subscription: `mrust_runtime::interval(2.0, Message::Tick)` di `Subscription::batch` → `Message::Tick` → `app.ticks += 1`
+- Subscription: `mrust_fw::interval(2.0, Message::Tick)` di `Subscription::batch` → `Message::Tick` → `app.ticks += 1`
 
 ## Konstruk yang ditonjolkan
 
 - `iced::application` + `.subscription(...)` (bukan `iced::run`)
 - Token `hx_*` + `mix_*` di-generate
 - `hx_hoist` penurun properti ke anak
-- `mrust_runtime::interval` (butuh Cargo.toml ber-deps `mrust-runtime`)
+- `mrust_fw::interval` (helper runtime di `mrust-fw`, bukan crate terpisah)

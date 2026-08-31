@@ -1,9 +1,0 @@
-[package]
-name = "mrust-runtime"
-version = "0.1.0"
-edition = "2021"
-publish = false
-
-[dependencies]
-iced = { version = "0.13", features = ["tokio"] }
-tokio = { version = "1", features = ["time"] }

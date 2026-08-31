@@ -1,5 +1,5 @@
 use iced::{Element, Length};
-use mrust_macro::view;
+use mrust_fw::view;
 
 #[derive(Debug, Clone)]
 enum Message {

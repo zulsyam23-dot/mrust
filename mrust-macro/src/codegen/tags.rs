@@ -155,7 +155,7 @@ pub(crate) fn hx_hint(token: &str) -> &'static str {
         .or_else(|| token.strip_prefix("hx_"))
         .unwrap_or(token);
     match base {
-        "poll" => "pasang `Subscription::batch(vec![mrust_runtime::interval(dtk, Msg::X)])` di `fn subscription()` app Anda",
+        "poll" => "pasang `Subscription::batch(vec![mrust_fw::interval(dtk, Msg::X)])` di `fn subscription()` app Anda",
         "trigger" => "butuh timer/state antar-event — tulis manual dgn `Subscription` (Debounce/throttle tak ada di iced)",
         "confirm" => "butuh state mesin konfirmasi di app (gate + overlay Batal/Lanjut) — tulis manual",
         "vals" | "include" => "butuh akses field state app utk mengumpulkan payload — tulis manual",

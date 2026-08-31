@@ -1,5 +1,5 @@
 use iced::{Element, Subscription};
-use mrust_macro::view;
+use mrust_fw::view;
 
 #[derive(Debug, Clone)]
 enum Message {
@@ -20,7 +20,7 @@ struct App {
 
 fn main() -> iced::Result {
     iced::application("mrust demo3 - token hx_*", update, view)
-        .subscription(|_| Subscription::batch(vec![mrust_runtime::interval(2.0, Message::Tick)]))
+        .subscription(|_| Subscription::batch(vec![mrust_fw::interval(2.0, Message::Tick)]))
         .run()
 }
 

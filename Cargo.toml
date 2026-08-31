@@ -1,7 +1,7 @@
 [workspace]
 members = [
     "mrust-macro",
-    "mrust-runtime",
+    "mrust-fw",
     "demo",
     "demo2",
     "demo3",
@@ -12,5 +12,8 @@ members = [
     "demo8",
     "demo9",
     "demo10",
+    "dfw",
+    "dfw2",
+    "dfw3",
 ]
 resolver = "2"

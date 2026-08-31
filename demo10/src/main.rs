@@ -1,5 +1,5 @@
 use iced::{Element, Length, Subscription};
-use mrust_macro::view;
+use mrust_fw::view;
 #[derive(Debug, Clone)]
 enum Message {
     Cari,
@@ -21,7 +21,7 @@ struct App {
 fn main() -> iced::Result {
     iced::application("mrust demo10 - semua fitur", update, view)
         .subscription(|_| {
-            Subscription::batch(vec![mrust_runtime::interval(2.0, Message::Tick)])
+            Subscription::batch(vec![mrust_fw::interval(2.0, Message::Tick)])
         })
         .run()
 }

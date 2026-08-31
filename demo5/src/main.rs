@@ -1,5 +1,5 @@
 use iced::Element;
-use mrust_macro::view;
+use mrust_fw::view;
 
 #[derive(Default)]
 struct App;

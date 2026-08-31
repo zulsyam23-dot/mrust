@@ -1,4 +1,4 @@
-# Referensi API & Token — mrust-macro (`view!{}`) + mrust-runtime
+# Referensi API & Token — mrust-macro (`view!{}`) + mrust-fw
 
 Panduan lengkap mulai dari unit terkecil (leksikal, tag dasar) sampai token
 perilaku `hx_*`/`mix_*`, tanpa terkecuali. Seluruh token dijelaskan beserta
@@ -16,7 +16,7 @@ contoh penggunaan dan (bila ada) batasan/error-nya.
 | 6. Kosakata HTML v0.4 | `ul`/`ol`/`menu`/`dl`, container semantik, `h1–h6`, role teks, `<a>`, stateful, asset `src` | Stable |
 | 7. Styling `style="…css…"` | parse CSS compile-time per jenis widget | Stable (v0.5-ish) |
 | 8. Token perilaku `hx_*`/`mix_*` | event alias, `hx_if`/`hx_visible`, `hx_disabled`, `hx_value`/`hx_bind`, `hx_hoist`/`hx_disinherit` (di-generate); sisanya deferred | Campuran |
-| 9. Runtime `mrust-runtime` | `Spread`, `if_elem`, `interval` | Stable |
+| 9. Runtime (di `mrust-fw`) | `Spread`, `if_elem`, `interval` | Stable |
 
 ---
 
@@ -373,7 +373,7 @@ Nilai = `Message` atau closure, sama seperti `on_press=…`/`on_input=…`.
 #### `hx_if={cond}` / `hx_visible={cond}` / `mix_if` / `mix_visible`
 
 Render kondisional: widget ditampilkan bila `cond` benar, dikosongkan menjadi
-`Space` tinggi-0 bila salah (via `mrust_runtime::if_elem`). `hx_if` dan
+`Space` tinggi-0 bila salah (via `mrust_fw::if_elem`). `hx_if` dan
 `hx_visible` identik (iced 0.13 tak punya "visible" yang menjaga keberadaan
 widget). Nilai **wajib ekspresi**.
 
@@ -448,7 +448,7 @@ kompilasi ber-version** plus panduan singkat.
 | `hx_bind` (non-input) | v0.2 | idem |
 | `hx_vals` | v0.2 | kumpulkan nilai input → message; akses state app |
 | `hx_include` | v0.2 | idem |
-| `hx_poll` | v0.3 | polling timer — **ada helper** `mrust_runtime::interval` siap-salin (lihat §9) |
+| `hx_poll` | v0.3 | polling timer — **ada helper** `mrust_fw::interval` siap-salin (lihat §9) |
 | `hx_busy` | v0.3 | state busy bool lintas-widget di app |
 | `hx_indicator` | v0.3 | idem |
 | `hx_on` | v0.3 | `on_press`/`on_input` hanya satu Message; buat varian multi-efek di `update()` |
@@ -456,26 +456,27 @@ kompilasi ber-version** plus panduan singkat.
 | `hx_disinherit` | v0.3 | **bekerja** (lihat §8.2) — tercantum utk kelengkapan |
 
 Token `hx_*`/`mix_*` yang **tidak dikenali** (salah ketik) → error
-`token "hx_x" tak dikenal (lihat prd2.md)` — bukan method `hx_x` yang
+`token "hx_x" tak dikenal (lihat PRD.md)` — bukan method `hx_x` yang
 membingungkan.
 
 ---
 
-## 9. mrust-runtime (crate opsional)
+## 9. Runtime (tergabung di `mrust-fw`)
 
-Dependensi hanya ditarik bila fitur yang memakainya dipakai (anak `{ }` pada
-layout `Spread`, atau `if_elem`/`interval`).
+`mrust-fw` (bukan crate terpisah) menyediakan helper `Spread`/`if_elem`/`interval`
+serta makro `app!` dan re-export `view!`. Dependensi hanya ditarik bila fitur
+yang memakainya dipakai.
 
 ```toml
 [dependencies]
-mrust-runtime = { path = "../mrust-runtime" }
+mrust-fw = { path = "../mrust-fw" }
 ```
 
 ### `Spread`
 
 Anak `{ ekspresi }` pada layout/container menerima **satu `Element`** ATAU
 **`Vec<Element>`** (hasil `.map().collect::<Vec<_>>()` untuk list dinamis).
-Di-call via `mrust_runtime::Spread::spread(expr)`.
+Di-call via `mrust_fw::Spread::spread(expr)`.
 
 ```rust
 <row>
@@ -497,12 +498,12 @@ Polling ala-htmx `hx_poll="every:2s"`: `Subscription` memancarkan `Message`
 ```rust
 fn subscription(&self) -> Subscription<Message> {
     Subscription::batch(vec![
-        mrust_runtime::interval(2.0, Message::Tick),
+        mrust_fw::interval(2.0, Message::Tick),
     ])
 }
 ```
 
-Butuh fitur `tokio` dgn backend timer (lihat mrust-runtime/Cargo.toml).
+Butuh fitur `tokio` dgn backend timer (lihat mrust-fw/Cargo.toml).
 (`ponytail:` id interval = durasi → cukup utk kasus umum; gunakan id unik
 per-elemen bila banyak polling identik-durasi.)
 
@@ -513,13 +514,11 @@ per-elemen bila banyak polling identik-durasi.)
 ```toml
 [dependencies]
 iced = "0.13"
-mrust-macro = { path = "../mrust-macro" }
-# hanya bila memakai {expr} di layout / if_elem / interval:
-mrust-runtime = { path = "../mrust-runtime" }
+mrust-fw = { path = "../mrust-fw" }   # memuat view!, Spread, if_elem, interval, app!
 ```
 
 ```rust
-use mrust_macro::view;
+use mrust_fw::view;
 use iced::{Element, Sandbox, Settings};
 
 #[derive(Debug, Clone, Copy)]

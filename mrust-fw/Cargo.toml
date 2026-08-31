@@ -1,0 +1,11 @@
+[package]
+name = "mrust-fw"
+version = "0.1.0"
+edition = "2021"
+description = "Framework tunggal (gabungan mrust-macro + mrust-runtime): sembunyikan setup/loop Iced"
+publish = false
+
+[dependencies]
+mrust-macro = { path = "../mrust-macro" }
+iced = { version = "0.13", features = ["tokio", "svg", "image"] }
+tokio = { version = "1", features = ["time"] }

@@ -1,0 +1,10 @@
+[package]
+name = "dfw2"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+mrust-fw = { path = "../mrust-fw" }
+# Macro `view!` meng-hardcode path absolut `::iced::`/`::mrust_fw::`; pengguna
+# tetap TIDAK menulis `iced::` di kode — hanya dependensi berikut.
+iced = { version = "0.13", features = ["svg"] }

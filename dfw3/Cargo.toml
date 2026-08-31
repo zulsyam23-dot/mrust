@@ -1,9 +1,8 @@
 [package]
-name = "demo3"
+name = "dfw3"
 version = "0.1.0"
 edition = "2021"
-publish = false
 
 [dependencies]
 mrust-fw = { path = "../mrust-fw" }
-iced = "0.13"
+iced = { version = "0.13", features = ["tokio", "svg"] }

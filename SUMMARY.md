@@ -55,7 +55,7 @@ Editor Rust (demo2) mirip VSCode 1:1 (title/menu bar, activity bar, Explorer + S
   - lib.rs tak berubah: masih `codegen::gen_element` & `codegen::attr_text`
   - Verifikasi: 54 macro + 1 runtime test lulus, `cargo test --workspace` & `cargo clippy --workspace --all-targets` bersih, `demo3` build OK
 
-- **`api-token.md` dibuat** — referensi API & token lengkap: lapisan 1–9 (leksikal, element/attribute, tag dasar v0.1, ekstensi HTML v0.2, iterasi/editor v0.3, kosakata v0.4, styling CSS, token `hx_*`/`mix_*` di-generate & deferred, runtime `mrust-runtime`) + setup + aturan mapping + verifikasi. prd.md & prd2.md kini menunjuknya utk cara pakai tiap token.
+- **`api-token.md` dibuat** — referensi API & token lengkap: lapisan 1–9 (leksikal, element/attribute, tag dasar v0.1, ekstensi HTML v0.2, iterasi/editor v0.3, kosakata v0.4, styling CSS, token `hx_*`/`mix_*` di-generate & deferred, runtime `mrust-fw`) + setup + aturan mapping + verifikasi. PRD.md kini menunjuknya utk cara pakai tiap token.
 
 ### In Progress
 - (tidak ada) — semua hijau
@@ -88,7 +88,7 @@ Editor Rust (demo2) mirip VSCode 1:1 (title/menu bar, activity bar, Explorer + S
 
 ## Relevant Files
 - `C:\Users\PC\Documents\mrust\api-token.md` — referensi API & token LENGKAP (leksikal → tag dasar → kosakata HTML → styling CSS → seluruh `hx_*`/`mix_*` di-generate & deferred + runtime) dengan contoh pemakaian, tanpa terkecuali
-- `C:\Users\PC\Documents\mrust\prd.md` / `prd2.md` — PRD (tujuan & kontrak); menunjuk api-token.md utk cara pakai
+- `C:\Users\PC\Documents\mrust\PRD.md` — PRD (tujuan & kontrak, gabungan markdown mrust-macro + token hx_* + framework mrust-fw); menunjuk api-token.md utk cara pakai
 - `C:\Users\PC\Documents\mrust\demo2\src\app.rs` — state inti VSCode (Msg/Cat/Modal/Cmd/App/run/save/search_matches/spacer)
 - `C:\Users\PC\Documents\mrust\demo2\src\title.rs` — title bar + menu Arsip/Tampilan/Bantuan → `Modal::Palette(cat)`
 - `C:\Users\PC\Documents\mrust\demo2\src\activity.rs` — activity bar ▦/◎ + mark • (42px, SIDEBG)
@@ -103,7 +103,7 @@ Editor Rust (demo2) mirip VSCode 1:1 (title/menu bar, activity bar, Explorer + S
 - `C:\Users\PC\Documents\mrust\mrust-macro\src\codegen\` — modul codegen (per-domain): `mod.rs` (dispatcher + Child/gen_child/extend_all + attr_text), `tags.rs` (tabel tag/alias + token hx_*), `css.rs` (mesin styling WKind), `attrs.rs` (apply_attrs/apply_disabled), `widget.rs` (gen_* + font)
 - `C:\Users\PC\Documents\mrust\mrust-macro\src\lib.rs` — 54 unit test macro (6 tes style tambahan)
 - `C:\Users\PC\Documents\mrust\mrust-macro\src\error.rs` — Error + impl Display (untuk assert test)
-- `C:\Users\PC\Documents\mrust\prd.md` — §6.8 kosakata tag; roadmap v0.4 & styling v0.5-ish selesai
+- `C:\Users\PC\Documents\mrust\PRD.md` — Part A makro (tag + CSS + roadmap) + Part B token `hx_*` + Part C framework mrust-fw (tergabung runtime); PRD lama `prd.md`/`prd2.md`/`prd3.md` dihapus setelah digabung
 
 ## Demo (urutan dasar → lanjutan manual)
 - `demo/src/main.rs` — counter (lap 3–4): header, row, text, input, checkbox, slider, progress, button
@@ -114,5 +114,5 @@ Editor Rust (demo2) mirip VSCode 1:1 (title/menu bar, activity bar, Explorer + S
 - `demo6/src/main.rs` — lap 8a event & kondisi: hx_click/mix_press/ontoggle/hx_visible/hx_if/hx_disabled
 - `demo7/src/main.rs` — lap 8b binding & hoist: hx_value(_to)/hx_bind(_to)/hx_hoist/hx_disinherit
 - `demo8/src/main.rs` — asset src: `<icon>`/`<svg>` (fitur iced `svg`), assets/icons/{dot,menu}.svg, Handle manual
-- `demo9/src/main.rs` — runtime interval: `mrust_runtime::interval` + `Subscription::batch(Message::Tick)`
+- `demo9/src/main.rs` — runtime interval: `mrust_fw::interval` + `Subscription::batch(Message::Tick)`
 - `demo10/src/main.rs` — gabungan semua fitur + runtime polling (subscription interval)

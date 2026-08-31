@@ -1,5 +1,5 @@
 use iced::Element;
-use mrust_macro::view;
+use mrust_fw::view;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Kategori {

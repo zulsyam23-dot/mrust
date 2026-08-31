@@ -5,5 +5,5 @@ edition = "2021"
 publish = false
 
 [dependencies]
+mrust-fw = { path = "../mrust-fw" }
 iced = "0.13"
-mrust-macro = { path = "../mrust-macro" }

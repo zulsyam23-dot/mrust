@@ -29,8 +29,8 @@ Tidak ada runtime JavaScript, tidak ada webview — hasilnya aplikasi desktop na
 
 Workspace Cargo berisi **library DSL** (macro + runtime) dan **10 demo** berjenjang yang menunjukkan fitur dari dasar hingga paling lengkap.
 
-> Roadmap & desain detail ada di [`prd.md`](prd.md), [`prd2.md`](prd2.md),
-> dan [`prd3.md`](prd3.md) (proposal framework `mrust-fw`).
+> Roadmap & desain detail ada di [`PRD.md`](PRD.md) (satu PRD gabungan:
+> markup `view!` + token `hx_*` + framework `mrust-fw`).
 > Referensi lengkap setiap tag & token (leksikal → `hx_*` → runtime) ada di [`api-token.md`](api-token.md).
 
 ---
@@ -39,21 +39,23 @@ Workspace Cargo berisi **library DSL** (macro + runtime) dan **10 demo** berjenj
 
 ```
 mrust/
-├── Cargo.toml            # workspace: mrust-macro, mrust-runtime, demo1–demo10
+├── Cargo.toml            # workspace: mrust-macro, mrust-fw, demo1–demo10, dfw*
 ├── mrust-macro/          # proc-macro `view!` (inti DSL)
 │   └── src/codegen/      # codegen per-domain: tags, css, attrs, widget
-├── mrust-runtime/        # helper opsional (interval polling / Spread)
+├── mrust-fw/             # framework + runtime (memuat interval/Spread/if_elem, macro app!)
 ├── demo/                 # demo1 — counter dasar (v0.1–v0.2)
 ├── demo2/ … demo10/      # demo lanjutan, dari iterasi hingga gabungan semua fitur
-├── prd.md, prd2.md       # PRD & kontrak
+├── dfw/, dfw2/, dfw3/    # demo framework mrust-fw (DSL string / CSS / app!)
+├── PRD.md                # PRD gabungan & kontrak
 └── api-token.md          # referensi API & token lengkap
 ```
 
 | Katalog | Peran |
 |---------|-------|
 | `mrust-macro` | Proc-macro `view!` — mengurai markup HTML & men-generate kode Iced. |
-| `mrust-runtime` | Crate opsional: `interval` (polling), `Spread`, `if_elem`. Ditarik hanya bila dipakai. |
+| `mrust-fw` | Framework + runtime tergabung: loop/state hidden, `interval` (polling), `Spread`, `if_elem`, DSL aksi string (`on`/`on_val`), makro `actions!`/`app!`, re-export `view!`. |
 | `demo`.1–`.10` | Contoh berjenjang, dari yang paling dasar sampai fitur lengkap. |
+| `dfw`/`dfw2`/`dfw3` | Contoh framework: aksi `act`/`act_v`, CSS + `hx_*` + iterasi + `<icon>`, dan `app!` seluruh-boilerplate. |
 
 ---
 
@@ -87,32 +89,31 @@ cargo clippy --workspace --all-targets
 
 ## Memakai MRust di Proyek Lain (dari GitHub)
 
-MRust adalah **library DSL** (proc-macro + runtime), jadi bisa dipakai langsung dari repo GitHub ini lewat dependency `git` di `Cargo.toml` proyekmu:
+MRust adalah **library DSL** (proc-macro + framework), jadi bisa dipakai langsung dari repo GitHub ini lewat dependency `git` di `Cargo.toml` proyekmu:
 
 ```toml
 [dependencies]
-iced = { version = "0.13", features = ["tokio"] }        # wajib — mrust tidak me-export iced
-mrust-macro = { git = "https://github.com/zulsyam23-dot/mrust", branch = "main" }
-mrust-runtime = { git = "https://github.com/zulsyam23-dot/mrust", branch = "main" }
+mrust-fw = { git = "https://github.com/zulsyam23-dot/mrust", branch = "main" }
+iced = "0.13"        # tetap dicantumkan karena view! meng-hardcode path ::iced::
 ```
 
 Lalu di kode:
 
 ```rust
-use mrust_macro::view;
+use mrust_fw::view;
 ```
 
 ### Catatan penting
 
-- **Iced harus ikut di-declare** — `mrust-macro` tidak me-export `iced`. Tambahkan juga `iced = "0.13"`, plus:
+- **Iced harus ikut di-declare** — `view!` meng-hardcode path absolut `::iced::`, jadi tambahkan juga `iced = "0.13"`, plus:
   - fitur `"svg"` bila memakai `<icon>`/`<svg>`;
-  - fitur `"tokio"` bila memakai `mrust_runtime::interval` (polling).
+  - fitur `"tokio"` bila memakai `mrust_fw::interval` (polling).
 - **Tentukan branch** — default `git` mengambil `master`, sedangkan repo ini memakai `main`, jadi `branch = "main"` wajib (atau gunakan `rev`).
 - **Pin revisi untuk stabilitas** — `branch = "main"` ikut commit terbaru tiap build. Untuk versi pasti, pakai `rev`:
   ```toml
-  mrust-macro = { git = "https://github.com/zulsyam23-dot/mrust", rev = "8c9f066" }
+  mrust-fw = { git = "https://github.com/zulsyam23-dot/mrust", rev = "8c9f066" }
   ```
-- `mrust-runtime` hanya perlu ditambahkan bila memakai `interval`/`Spread`/`if_elem`; `mrust-macro` saja cukup untuk `view!` dasar.
+- `mrust-fw` sudah memuat runtime (`interval`/`Spread`/`if_elem`) dan makro `app!`/`actions!` — cukup satu crate. (Crate `mrust-runtime` dan `mrust-macro` langsung tidak perlu di-declare; `mrust-macro` adalah dependensi internal `mrust-fw`.)
 
 ---
 
@@ -130,7 +131,7 @@ Setiap demo punya `README.md` sendiri. Salah satunya, demo10, menggabungkan hamp
 | `demo6` | Event alias + `hx_if`/`hx_visible`/`hx_disabled` | `demo6` |
 | `demo7` | Binding & `hx_hoist`/`hx_disinherit` | `demo7` |
 | `demo8` | Aset `src` (ikon/SVG, butuh fitur iced `svg`) | `demo8` |
-| `demo9` | `mrust_runtime::interval` (polling 2 detik) | `demo9` |
+| `demo9` | `mrust_fw::interval` (polling 2 detik) | `demo9` |
 | `demo10` | Gabungan semua fitur + runtime | `demo10` |
 
 Contoh:
@@ -141,47 +142,31 @@ cargo run --package demo10   # melihat hampir semua fitur sekaligus
 
 ---
 
-## Contoh Lengkap: `view!` + State
+## Contoh Lengkap: `view!` + State (framework)
 
 ```rust
-use iced::Element;
-use mrust_macro::view;
-
-#[derive(Debug, Clone)]
-enum Message {
-    Inc,
-    Dec,
-}
+use mrust_fw::{self, view, act};
 
 #[derive(Default)]
 struct App {
     count: i32,
 }
 
-impl App {
-    fn view(&self) -> Element<'_, Message> {
-        view! {
-            <column spacing=16 padding=24>
-                <text size=40>Counter: {self.count}</text>
-                <row spacing=8>
-                    <button on_press=Message::Dec>"-1"</button>
-                    <button on_press=Message::Inc>"+1"</button>
-                </row>
-            </column>
-        }
-        .into()
+fn view(app: &App) -> mrust_fw::Element<'_, App> {
+    view! {
+        <column spacing=16 padding=24>
+            <text size=40>"Counter: " {app.count}</text>
+            <row spacing=8>
+                <button on_press={act(|a: &mut App| a.count -= 1)}>"-1"</button>
+                <button on_press={act(|a: &mut App| a.count += 1)}>"+1"</button>
+            </row>
+        </column>
     }
+    .into()
 }
 
-fn main() -> iced::Result {
-    iced::run("Contoh MRust", update, App::view)
-}
-
-fn update(app: &mut App, msg: Message) {
-    match msg {
-        Message::Inc => app.count += 1,
-        Message::Dec => app.count -= 1,
-    }
+fn main() -> mrust_fw::Result {
+    mrust_fw::run::<App>("Contoh MRust", view)
 }
 ```
 
@@ -194,7 +179,7 @@ fn update(app: &mut App, msg: Message) {
 - **Kontrol** via token `hx_*` / `mix_*` (event alias, kondisi `hx_if`/`hx_visible`, `hx_disabled`).
 - **Styling CSS** inline `style="background:#111; color:#eee; padding:12px; border-radius:6px"`.
 - **Iterasi dinamis**: render `Vec<T>` lewat `{ … .map(...).collect::<Vec<_>>() }`.
-- **Runtime ringan opsional**: `interval` untuk polling ala-htmx `hx_poll`.
+- **Runtime ringan (tergabung di `mrust-fw`)**: `interval` untuk polling ala-htmx `hx_poll`; makro `app!` menyembunyikan seluruh boilerplate struktural.
 
 Referensi lengkap semua tag, attribute, dan token: **[`api-token.md`](api-token.md)**.
 

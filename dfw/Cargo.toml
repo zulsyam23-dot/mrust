@@ -1,0 +1,11 @@
+[package]
+name = "dfw"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+mrust-fw = { path = "../mrust-fw" }
+# `view!` meng-hardcode path absolut `::iced::` dan `::mrust_fw::` — jadi `iced`
+# tetap perlu sebagai dependensi langsung (root path). Pengguna TIDAK menulis
+# `iced::` di kode — hanya baris dependensi ini + `mrust-fw`.
+iced = "0.13"

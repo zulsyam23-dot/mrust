@@ -536,7 +536,7 @@ let out = expand(quote::quote! {
         });
         let e = out.unwrap_err().to_string();
         assert!(e.contains("hx_poll"), "{e}");
-        assert!(e.contains("mrust_runtime::interval"), "{e}");
+        assert!(e.contains("mrust_fw::interval"), "{e}");
         assert!(e.contains("subscription()"), "{e}");
     }
 

@@ -1,5 +1,5 @@
 use iced::{Element, Subscription};
-use mrust_macro::view;
+use mrust_fw::view;
 
 #[derive(Debug, Clone)]
 enum Message {
@@ -18,7 +18,7 @@ fn main() -> iced::Result {
         .subscription(|_| {
             Subscription::batch(vec![
                 // polling ala-htmx `hx_poll="every:2s"` — helper runtime.
-                mrust_runtime::interval(2.0, Message::Tick),
+                mrust_fw::interval(2.0, Message::Tick),
             ])
         })
         .run()
@@ -40,7 +40,7 @@ fn update(app: &mut App, msg: Message) {
 fn view(app: &App) -> Element<'_, Message> {
     view! {
         <column spacing=14 padding=24>
-            <text size=22>"Demo9 - mrust_runtime::interval (polling 2s)"</text>
+            <text size=22>"Demo9 - mrust_fw::interval (polling 2s)"</text>
 
             <text size=30 color={iced::Color::from_rgb(0.6, 1.0, 0.7)}>
                 "detik: {app.detik}"

@@ -20,7 +20,7 @@ Menggunakan `iced::application(...).subscription(...).run()`:
 - **Iterasi dinamis**: daftar item dari `Vec<String>` via `{ ... .map(...).collect::<Vec<_>>() }`, tiap item `<row><text/><spacer/><button hapus/></row>`
 - **Hoist**: `<column hx_hoist="align_x" align_x={Alignment::Center}>`
 - **Role teks**: `<code>` & `<mark>` dalam `<div><row>`
-- **Runtime**: `mrust_runtime::interval(2.0, Message::Tick)` → `app.detik += 1`, tampil `"Responsif tiap {app.detik}s"`
+- **Runtime**: `mrust_fw::interval(2.0, Message::Tick)` → `app.detik += 1`, tampil `"Responsif tiap {app.detik}s"`
 
 ## Konstruk yang ditonjolkan
 

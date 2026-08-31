@@ -86,7 +86,7 @@ fn gen_element_inner(e: &Element) -> Result<TokenStream, Error> {
 /// (lihat `extract_behavior` di lib.rs): `cond` -> tampil/sembunyi via if/else.
 pub(crate) fn wrap_behavior(e: &Element, inner: TokenStream) -> Result<TokenStream, Error> {
     let cond = match &e.cond {
-        Some(c) => quote::quote! { ::mrust_runtime::if_elem(#c, (#inner).into()) },
+        Some(c) => quote::quote! { ::mrust_fw::if_elem(#c, (#inner).into()) },
         None => inner,
     };
     // `disabled` ditangani khusus per-jenis widget di gen_leaf (button).
@@ -114,7 +114,7 @@ pub(crate) fn gen_child(n: &Node) -> Result<Child, Error> {
 pub(crate) fn extend_all(base: TokenStream, children: &[Child]) -> TokenStream {
     children.iter().fold(base, |acc, c| match c {
         Child::Widget(w) => quote::quote! { #acc.extend(::std::iter::once((#w).into())) },
-        Child::Spread(x) => quote::quote! { #acc.extend(::mrust_runtime::Spread::spread(#x)) },
+        Child::Spread(x) => quote::quote! { #acc.extend(::mrust_fw::Spread::spread(#x)) },
     })
 }
 
